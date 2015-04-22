@@ -8,7 +8,7 @@ public class HSVColorGradient implements Cloneable{
     private HSVColor endColor;
 
     HSVColorGradient(HSVColor firstColor, HSVColor lastColor){
-        this.startColor = firstColor.clone();
+        this.startColor = firstColor.clone(); //These clones are important!!
         this.endColor = lastColor.clone();
     }
 
