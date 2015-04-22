@@ -17,7 +17,7 @@ public class ColorTable {
     static private final String SQL_DB_CREATE =
             "CREATE TABLE " + COLOR_TABLE
                     + "("
-                    + COLUMN_ID + " integer primary key autoincremement, "
+                    + COLUMN_ID + " integer primary key autoincrement, "
                     + COLUMN_NAME + " text, "
                     + COLUMN_HUE + " real not null, "
                     + COLUMN_SATURATION + " real not null, "

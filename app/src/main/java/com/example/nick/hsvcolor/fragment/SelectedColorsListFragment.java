@@ -42,9 +42,6 @@ public class SelectedColorsListFragment extends Fragment {
         values.put(ColorTable.COLUMN_SATURATION, .3);
         values.put(ColorTable.COLUMN_VALUE, .94);
 
-        ColorContentProvider ccp = new ColorContentProvider();
-        ccp.performInsert(values);
-
         String[] selections = {"200", "300",
                                ".2" , ".6",
                                ".8" , "1"};

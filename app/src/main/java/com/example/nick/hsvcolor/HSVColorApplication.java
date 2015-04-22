@@ -1,6 +1,9 @@
 package com.example.nick.hsvcolor;
 
 import android.app.Application;
+import android.content.ContentValues;
+
+import com.example.nick.hsvcolor.db.ColorContentProvider;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,15 +28,12 @@ public class HSVColorApplication extends Application {
 
         @Override
         public void run(){
-            //for (int i = 0; i < urls.length; i++) {
-                StringBuffer sb = new StringBuffer();
-
+            for (int i = 0; i < urls.length; i++) {
                 try {
-                    Document doc = Jsoup.connect(urls[0]).get();
+                    Document doc = Jsoup.connect(urls[i]).get();
 
                     Element body = doc.body();
                     Elements colorRows = body.getElementsByTag("table").first().getElementsByTag("tbody").first().getElementsByTag("tr");
-                    String colorRowsHtml = colorRows.html();
 
                     boolean first = true;
                     for(Element colorRow : colorRows){
@@ -42,24 +42,47 @@ public class HSVColorApplication extends Application {
                             first = false;
                             continue;
                         }
-                        String colorRowHtml = colorRow.html();
+
                         String name = colorRow.select("th").text();
 
-                        Elements values = colorRow.select("td");
-                        System.out.println(name);
-                        String hue = values.get(4).text();
-                        System.out.println(hue);
-                        String saturation = values.get(7).text();
-                        System.out.println(saturation);
-                        String value = values.get(8).text();
-                        System.out.println(value);
+                        Elements colorHTMLValues = colorRow.select("td");
+                        float hue = parseHue(colorHTMLValues.get(4).text());
+                        float saturation = parseSaturation(colorHTMLValues.get(7).text());
+                        float value = parseValue(colorHTMLValues.get(8).text());
+
+                        ContentValues values = new ContentValues();
+                        values.put("name", name);
+                        values.put("hue", hue);
+                        values.put("saturation", saturation);
+                        values.put("value", value);
+
+                        getContentResolver().insert(ColorContentProvider.CONTENT_URI, values);
                     }
 
                 }
                 catch (Exception e){
                     e.printStackTrace();
                 }
-            //}
+            }
+        }
+
+        private float parseHue(String hueStringWithJunk){
+            String[] hueStringArrayWithJunk = hueStringWithJunk.split("♠");
+            String hueString = hueStringArrayWithJunk.length == 2 ? hueStringArrayWithJunk[1].substring(0, hueStringArrayWithJunk[1].length() - 1) : "0";
+
+            return Float.parseFloat(hueString);
+        }
+
+        private float parseSaturation(String saturationStringWithPercent){
+            String saturationString = saturationStringWithPercent.substring(0, saturationStringWithPercent.length() - 1);
+
+            return Float.parseFloat(saturationString);
+        }
+
+        private float parseValue(String valueStringWithPercent){
+            String valueString = valueStringWithPercent.substring(0, valueStringWithPercent.length() - 1);
+
+            return Float.parseFloat(valueString);
         }
     }
 }
