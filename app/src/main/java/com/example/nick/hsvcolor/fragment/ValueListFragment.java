@@ -47,6 +47,8 @@ public class ValueListFragment extends Fragment {
                 //Open saturation fragment with clicked HSVColor
                 SelectedColorsListFragment scFragment = new SelectedColorsListFragment();
 
+                scFragment.setHSVColorGradient((HSVColorGradient) parent.getItemAtPosition(position));
+
                 //Pass clicked HSVColor to new fragment
                 //TOGO: ADD BUNDLE SUPPORT
                 //Bundle args = new Bundle();

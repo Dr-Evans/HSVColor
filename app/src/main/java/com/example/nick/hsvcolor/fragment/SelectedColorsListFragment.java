@@ -1,7 +1,6 @@
 package com.example.nick.hsvcolor.fragment;
 
 import android.app.Fragment;
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,12 +20,13 @@ import java.util.ArrayList;
  * Created by Nick on 4/22/2015.
  */
 public class SelectedColorsListFragment extends Fragment {
-    private static final String[] mProjection = {ColorTable.COLUMN_ID, ColorTable.COLUMN_NAME, ColorTable.COLUMN_HUE, ColorTable.COLUMN_SATURATION, ColorTable.COLUMN_VALUE};
-    private static final String mSelectionClause = "WHERE " + ColorTable.COLUMN_HUE + ">=? AND " + ColorTable.COLUMN_HUE + "<=? AND " +
-                                                              ColorTable.COLUMN_SATURATION + ">=? AND " + ColorTable.COLUMN_SATURATION + "<=? AND " +
-                                                              ColorTable.COLUMN_VALUE + ">=? AND " + ColorTable.COLUMN_VALUE + "<=?";
-    private static final String mSortOrder = ColorTable.COLUMN_HUE;
+    private static final String mSelectionClause = ColorTable.COLUMN_HUE + ">= ? AND " + ColorTable.COLUMN_HUE + "<= ? AND " +
+                                                   ColorTable.COLUMN_SATURATION + ">= ? AND " + ColorTable.COLUMN_SATURATION + "<= ? AND " +
+                                                   ColorTable.COLUMN_VALUE + ">= ? AND " + ColorTable.COLUMN_VALUE + "<= ?";
+    private static final String mOrderBy = ColorTable.COLUMN_HUE + " DESC, " + ColorTable.COLUMN_SATURATION + " DESC, " + ColorTable.COLUMN_VALUE + " DESC";
+    private HSVColorGradient hsvColorGradient;
     private Cursor mCursor;
+    private String[] selectionArgs;
     private HSVColorInformationAdapter hsvColorInformationAdapter;
     private ArrayList<HSVColor> mColorList;
 
@@ -35,24 +35,25 @@ public class SelectedColorsListFragment extends Fragment {
 
         final ListView listView = (ListView) view.findViewById(R.id.selected_colors_list_view);
 
-        //Get selections
-        ContentValues values = new ContentValues();
-        values.put(ColorTable.COLUMN_NAME, "BLUE");
-        values.put(ColorTable.COLUMN_HUE, 250);
-        values.put(ColorTable.COLUMN_SATURATION, .3);
-        values.put(ColorTable.COLUMN_VALUE, .94);
+        //Get selections from color gradient
+        float[] args = {
+                        hsvColorGradient.getStartColor().getHue(), hsvColorGradient.getEndColor().getHue(),
+                        hsvColorGradient.getStartColor().getSaturation() - (float).05, hsvColorGradient.getEndColor().getSaturation() + (float).05,
+                        hsvColorGradient.getStartColor().getValue() - (float).05, hsvColorGradient.getEndColor().getValue() + (float).05
+                       };
 
-        String[] selections = {"200", "300",
-                               ".2" , ".6",
-                               ".8" , "1"};
+        selectionArgs = new String[args.length];
+        for(int i = 0; i < args.length; i++){
+            selectionArgs[i] = Float.toString(args[i]);
+        }
 
         //Perform database query
         mCursor = getActivity().getContentResolver().query(
                 ColorContentProvider.CONTENT_URI,
-                mProjection,
+                null,
                 mSelectionClause,
-                selections,
-                mSortOrder
+                selectionArgs,
+                mOrderBy
         );
 
         if(mCursor.getCount() < 1){
@@ -95,5 +96,9 @@ public class SelectedColorsListFragment extends Fragment {
         cursor.close();
 
         return list;
+    }
+
+    public void setHSVColorGradient(HSVColorGradient hsvColorGradient) {
+        this.hsvColorGradient = hsvColorGradient;
     }
 }

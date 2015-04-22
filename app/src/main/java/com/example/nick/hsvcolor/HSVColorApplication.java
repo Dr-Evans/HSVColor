@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.ContentValues;
 
 import com.example.nick.hsvcolor.db.ColorContentProvider;
+import com.example.nick.hsvcolor.db.ColorTable;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,6 +29,8 @@ public class HSVColorApplication extends Application {
 
         @Override
         public void run(){
+            deleteDatabase(ColorTable.COLOR_TABLE);
+
             for (int i = 0; i < urls.length; i++) {
                 try {
                     Document doc = Jsoup.connect(urls[i]).get();
@@ -51,19 +54,20 @@ public class HSVColorApplication extends Application {
                         float value = parseValue(colorHTMLValues.get(8).text());
 
                         ContentValues values = new ContentValues();
-                        values.put("name", name);
-                        values.put("hue", hue);
-                        values.put("saturation", saturation);
-                        values.put("value", value);
+                        values.put(ColorTable.COLUMN_NAME, name);
+                        values.put(ColorTable.COLUMN_HUE, hue);
+                        values.put(ColorTable.COLUMN_SATURATION, saturation);
+                        values.put(ColorTable.COLUMN_VALUE, value);
 
                         getContentResolver().insert(ColorContentProvider.CONTENT_URI, values);
                     }
-
                 }
                 catch (Exception e){
                     e.printStackTrace();
                 }
             }
+
+            System.out.println("LOADING FROM ONLINE COMPLETE!");
         }
 
         private float parseHue(String hueStringWithJunk){
@@ -76,13 +80,13 @@ public class HSVColorApplication extends Application {
         private float parseSaturation(String saturationStringWithPercent){
             String saturationString = saturationStringWithPercent.substring(0, saturationStringWithPercent.length() - 1);
 
-            return Float.parseFloat(saturationString);
+            return Float.parseFloat(saturationString) / (float)100;
         }
 
         private float parseValue(String valueStringWithPercent){
             String valueString = valueStringWithPercent.substring(0, valueStringWithPercent.length() - 1);
 
-            return Float.parseFloat(valueString);
+            return Float.parseFloat(valueString) / (float)100;
         }
     }
 }

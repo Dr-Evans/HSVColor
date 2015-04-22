@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
+import java.util.Arrays;
+
 /**
  * Created by Nick on 4/22/2015.
  */
@@ -39,6 +41,8 @@ public class ColorContentProvider extends ContentProvider{
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        System.out.println(selection);
+        System.out.println(Arrays.toString(selectionArgs));
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 
         queryBuilder.setTables(ColorTable.COLOR_TABLE);
@@ -54,7 +58,10 @@ public class ColorContentProvider extends ContentProvider{
         }
 
         SQLiteDatabase wdb = db.getWritableDatabase();
+        String s = queryBuilder.buildQuery(projection, selection, null, null, sortOrder, null);
+        System.out.println(s);
         Cursor cursor = queryBuilder.query(wdb, projection, selection, selectionArgs, null, null, sortOrder);
+        //Cursor cursor = queryBuilder.query(wdb, projection, selection, selectionArgs, null, null, sortOrder);
 
         //Tell the cursor to be notified by this URI when a change in the data occurs (such as an insert)
         //The cursor will then update itself with the new data

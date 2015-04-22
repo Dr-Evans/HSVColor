@@ -18,7 +18,7 @@ public class ColorTable {
             "CREATE TABLE " + COLOR_TABLE
                     + "("
                     + COLUMN_ID + " integer primary key autoincrement, "
-                    + COLUMN_NAME + " text, "
+                    + COLUMN_NAME + " text not null, "
                     + COLUMN_HUE + " real not null, "
                     + COLUMN_SATURATION + " real not null, "
                     + COLUMN_VALUE + " real not null"
