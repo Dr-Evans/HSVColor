@@ -1,8 +1,8 @@
 package com.example.nick.hsvcolor;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +41,27 @@ public class SaturationListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.v("SaturationListFragment", "Position " + parent.getItemAtPosition(position) + " pressed!");
+                //Open saturation fragment with clicked HSVColor
+                ValueListFragment vFragment = new ValueListFragment();
+
+                //Pass clicked HSVColor to new fragment
+                //TOGO: ADD BUNDLE SUPPORT
+                //Bundle args = new Bundle();
+                //args.putParcelable("HSVColor", (Parcelable) parent.getItemAtPosition(position));
+                //sFragment.setArguments(args);
+                vFragment.setHSVColor((HSVColor) parent.getItemAtPosition(position));
+
+                //Build transaction
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                //Replace fragment in activate with new fragment
+                transaction.replace(R.id.list_fragment_container, vFragment);
+
+                //Add transaction to the back stack so user can navigate back
+                transaction.addToBackStack(null);
+
+                //Commit
+                transaction.commit();
             }
         });
 
