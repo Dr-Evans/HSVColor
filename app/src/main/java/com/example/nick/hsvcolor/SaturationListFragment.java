@@ -17,9 +17,9 @@ import java.util.ArrayList;
 public class SaturationListFragment extends Fragment {
     private static final double saturationChange = .1;
 
-    private HSVColor hsvcolor;
-    private ArrayList<HSVColor> mSaturationList;
-    private HSVColorAdapter mHSVColorAdapter;
+    private HSVColorGradient hsvColorGradient;
+    private ArrayList<HSVColorGradient> mSaturationGradientList;
+    private HSVColorGradientAdapter hsvColorGradientAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,16 +27,16 @@ public class SaturationListFragment extends Fragment {
 
         final ListView listView = (ListView) view.findViewById(R.id.saturation_list_view);
 
-        if (mSaturationList == null){
-            mSaturationList = generateSaturationList();
+        if (mSaturationGradientList == null){
+            mSaturationGradientList = generateSaturationGradientList();
         }
 
-        mHSVColorAdapter = new HSVColorAdapter(getActivity(),
-                mSaturationList,
+        hsvColorGradientAdapter = new HSVColorGradientAdapter(getActivity(),
+                mSaturationGradientList,
                 R.layout.saturation_list_item,
                 R.id.saturation_list_item);
 
-        listView.setAdapter(mHSVColorAdapter);
+        listView.setAdapter(hsvColorGradientAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -49,7 +49,7 @@ public class SaturationListFragment extends Fragment {
                 //Bundle args = new Bundle();
                 //args.putParcelable("HSVColor", (Parcelable) parent.getItemAtPosition(position));
                 //sFragment.setArguments(args);
-                vFragment.setHSVColor((HSVColor) parent.getItemAtPosition(position));
+                vFragment.setHSVColorGradient((HSVColorGradient) parent.getItemAtPosition(position));
 
                 //Build transaction
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -68,25 +68,25 @@ public class SaturationListFragment extends Fragment {
         return view;
     }
 
-    private ArrayList<HSVColor> generateSaturationList(){
-        ArrayList<HSVColor> satList = new ArrayList<>();
+    private ArrayList<HSVColorGradient> generateSaturationGradientList(){
+        ArrayList<HSVColorGradient> satList = new ArrayList<>();
 
         int numOfInitialColors = (int)Math.round(1.0 / saturationChange);
         for(int i = 0; i < numOfInitialColors; i++){
             //Create clone
-            HSVColor hsv = hsvcolor.clone();
+            HSVColorGradient gradient = hsvColorGradient.clone();
 
             //Modify saturation
-            hsv.setSaturation(hsv.getSaturation() - (float)(i * saturationChange));
+            gradient.setSaturation(1 - (float)(i * saturationChange));
 
             //Add to list
-            satList.add(hsv);
+            satList.add(gradient);
         }
 
         return satList;
     }
 
-    public void setHSVColor(HSVColor hsvcolor) {
-        this.hsvcolor = hsvcolor;
+    public void setHSVColorGradient(HSVColorGradient hsvColorGradient) {
+        this.hsvColorGradient = hsvColorGradient;
     }
 }

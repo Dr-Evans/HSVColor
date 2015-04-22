@@ -15,9 +15,9 @@ import java.util.ArrayList;
 public class ValueListFragment extends Fragment {
     private static final double valueChange = .1;
 
-    private HSVColor hsvcolor;
-    private ArrayList<HSVColor> mValueList;
-    private HSVColorAdapter mHSVColorAdapter;
+    private HSVColorGradient hsvColorGradient;
+    private ArrayList<HSVColorGradient> mValueGradientList;
+    private HSVColorGradientAdapter hsvColorGradientAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -25,39 +25,39 @@ public class ValueListFragment extends Fragment {
 
         final ListView listView = (ListView) view.findViewById(R.id.value_list_view);
 
-        if (mValueList == null){
-            mValueList = generateValueList();
+        if (mValueGradientList == null){
+            mValueGradientList = generateValueGradientList();
         }
 
-        mHSVColorAdapter = new HSVColorAdapter(getActivity(),
-                mValueList,
+        hsvColorGradientAdapter = new HSVColorGradientAdapter(getActivity(),
+                mValueGradientList,
                 R.layout.value_list_item,
                 R.id.value_list_item);
 
-        listView.setAdapter(mHSVColorAdapter);
+        listView.setAdapter(hsvColorGradientAdapter);
 
         return view;
     }
 
-    private ArrayList<HSVColor> generateValueList(){
-        ArrayList<HSVColor> satList = new ArrayList<>();
+    private ArrayList<HSVColorGradient> generateValueGradientList(){
+        ArrayList<HSVColorGradient> satList = new ArrayList<>();
 
         int numOfInitialColors = (int)Math.round(1.0 / valueChange);
         for(int i = 0; i < numOfInitialColors; i++){
             //Create clone
-            HSVColor hsv = hsvcolor.clone();
+            HSVColorGradient gradient = hsvColorGradient.clone();
 
             //Modify value
-            hsv.setValue(hsv.getValue() - (float)(i * valueChange));
+            gradient.setValue(1 - (float) (i * valueChange));
 
             //Add to list
-            satList.add(hsv);
+            satList.add(gradient);
         }
 
         return satList;
     }
 
-    public void setHSVColor(HSVColor hsvcolor) {
-        this.hsvcolor = hsvcolor;
+    public void setHSVColorGradient(HSVColorGradient hsvColorGradient) {
+        this.hsvColorGradient = hsvColorGradient;
     }
 }

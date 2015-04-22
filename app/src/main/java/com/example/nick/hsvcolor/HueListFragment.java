@@ -17,8 +17,8 @@ import java.util.ArrayList;
 public class HueListFragment extends Fragment {
     private static final int degrees = 30;
 
-    private ArrayList<HSVColor> mHueList;
-    private HSVColorAdapter mHSVColorAdapter;
+    private ArrayList<HSVColorGradient> mHueGradientList;
+    private HSVColorGradientAdapter hsvColorGradientAdapter;
 
 
     @Override
@@ -27,16 +27,16 @@ public class HueListFragment extends Fragment {
 
         final ListView listView = (ListView) view.findViewById(R.id.hue_list_view);
 
-        if (mHueList == null){
-            mHueList = generateHueList();
+        if (mHueGradientList == null){
+            mHueGradientList = generateHueGradientList();
         }
 
-        mHSVColorAdapter = new HSVColorAdapter(getActivity(),
-                                               mHueList,
+        hsvColorGradientAdapter = new HSVColorGradientAdapter(getActivity(),
+                                               mHueGradientList,
                                                R.layout.hue_list_item,
                                                R.id.hue_list_item);
 
-        listView.setAdapter(mHSVColorAdapter);
+        listView.setAdapter(hsvColorGradientAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -49,7 +49,7 @@ public class HueListFragment extends Fragment {
                 //Bundle args = new Bundle();
                 //args.putParcelable("HSVColor", (Parcelable) parent.getItemAtPosition(position));
                 //sFragment.setArguments(args);
-                sFragment.setHSVColor((HSVColor) parent.getItemAtPosition(position));
+                sFragment.setHSVColorGradient((HSVColorGradient) parent.getItemAtPosition(position));
 
                 //Build transaction
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -68,16 +68,20 @@ public class HueListFragment extends Fragment {
         return view;
     }
 
-    private ArrayList<HSVColor> generateHueList(){
-        ArrayList<HSVColor> hueList = new ArrayList<>();
+    private ArrayList<HSVColorGradient> generateHueGradientList(){
+        ArrayList<HSVColorGradient> hueList = new ArrayList<>();
 
         int offset = (degrees / 2) * -1;
         int numOfInitialColors = 360 / degrees;
         float mult = 360 / numOfInitialColors;
 
         for(int i = 0; i < numOfInitialColors; i++){
-            float hue = ((i * mult) + offset) % 360;
-            hueList.add(new HSVColor(hue, 1, 1));
+            float startHue = ((i * mult) + offset) % 360;
+            HSVColor startColor = new HSVColor(startHue, 1, 1);
+
+            float endHue = (((i + 1) * mult) + offset) % 360;
+            HSVColor endColor = new HSVColor(endHue, 1, 1);
+            hueList.add(new HSVColorGradient(startColor, endColor));
         }
 
         return hueList;
