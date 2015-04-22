@@ -1,4 +1,4 @@
-package com.example.nick.hsvcolor;
+package com.example.nick.hsvcolor.fragment;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import com.example.nick.hsvcolor.R;
+import com.example.nick.hsvcolor.arrayadapter.HSVColorGradientAdapter;
 
 import java.util.ArrayList;
 

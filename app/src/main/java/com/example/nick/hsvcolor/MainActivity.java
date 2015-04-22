@@ -3,6 +3,8 @@ package com.example.nick.hsvcolor;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.example.nick.hsvcolor.fragment.HueListFragment;
+
 
 public class MainActivity extends Activity {
 

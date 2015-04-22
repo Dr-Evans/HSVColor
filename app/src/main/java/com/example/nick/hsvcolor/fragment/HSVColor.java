@@ -1,4 +1,4 @@
-package com.example.nick.hsvcolor;
+package com.example.nick.hsvcolor.fragment;
 
 import android.graphics.Color;
 
@@ -9,8 +9,16 @@ public class HSVColor implements Cloneable{
     private float hue;
     private float saturation;
     private float value;
+    private String name;
 
-    HSVColor (float h, float s, float v){
+    public HSVColor (float h, float s, float v){
+        hue = h;
+        saturation = s;
+        value = v;
+    }
+
+    public HSVColor (String n, float h, float s, float v){
+        name = n;
         hue = h;
         saturation = s;
         value = v;
@@ -38,6 +46,14 @@ public class HSVColor implements Cloneable{
 
     public void setValue(float value) {
         this.value = value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int toInt(){

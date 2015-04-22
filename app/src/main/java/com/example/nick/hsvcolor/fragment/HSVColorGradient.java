@@ -1,4 +1,4 @@
-package com.example.nick.hsvcolor;
+package com.example.nick.hsvcolor.fragment;
 
 /**
  * Created by Nick on 4/22/2015.
