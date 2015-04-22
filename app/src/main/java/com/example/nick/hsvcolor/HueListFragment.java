@@ -1,6 +1,7 @@
 package com.example.nick.hsvcolor;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,6 @@ import java.util.ArrayList;
  */
 public class HueListFragment extends Fragment {
     private static final int degrees = 30;
-    private static final int hueListItemLayout = R.layout.hue_list_item;
-    private static final int hueListItem = R.id.hue_list_item;
 
     private ArrayList<HSVColor> mHueList;
     private HSVColorAdapter mHSVColorAdapter;
@@ -34,8 +33,8 @@ public class HueListFragment extends Fragment {
 
         mHSVColorAdapter = new HSVColorAdapter(getActivity(),
                                                mHueList,
-                                               hueListItemLayout,
-                                               hueListItem);
+                                               R.layout.hue_list_item,
+                                               R.id.hue_list_item);
 
         listView.setAdapter(mHSVColorAdapter);
 
@@ -43,6 +42,26 @@ public class HueListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Open saturation fragment with clicked HSVColor
+                SaturationListFragment sFragment = new SaturationListFragment();
+
+                //Pass clicked HSVColor to new fragment
+                //TOGO: ADD BUNDLE SUPPORT
+                //Bundle args = new Bundle();
+                //args.putParcelable("HSVColor", (Parcelable) parent.getItemAtPosition(position));
+                //sFragment.setArguments(args);
+                sFragment.setHSVColor((HSVColor) parent.getItemAtPosition(position));
+
+                //Build transaction
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+                //Replace fragment in activate with new fragment
+                transaction.replace(R.id.list_fragment_container, sFragment);
+
+                //Add transaction to the back stack so user can navigate back
+                transaction.addToBackStack(null);
+
+                //Commit
+                transaction.commit();
             }
         });
 

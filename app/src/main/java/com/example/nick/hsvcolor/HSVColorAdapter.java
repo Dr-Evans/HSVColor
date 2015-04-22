@@ -13,14 +13,12 @@ import java.util.List;
  * Created by Nick on 4/21/2015.
  */
 public class HSVColorAdapter extends ArrayAdapter<HSVColor> {
-    private final List<HSVColor> colorsList;
     private final int layoutID;
     private final int listItemID;
 
     public HSVColorAdapter(Context context, List<HSVColor> objects, int layoutID, int listItemID){
         super(context, 0, objects);
 
-        this.colorsList = objects;
         this.layoutID = layoutID;
         this.listItemID = listItemID;
     }
@@ -35,7 +33,7 @@ public class HSVColorAdapter extends ArrayAdapter<HSVColor> {
 
         //Populate the (sub)views
         HSVColor currentColor = getItem(position);
-        HSVColor nextColor = getItem((position + 1) % colorsList.size());
+        HSVColor nextColor = getItem((position + 1) % getCount()); // BUG FOR SATURATION AND VALUE
 
         GradientDrawable drawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[] {currentColor.toInt(), nextColor.toInt()});
 

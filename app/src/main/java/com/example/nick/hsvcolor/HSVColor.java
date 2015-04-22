@@ -5,7 +5,7 @@ import android.graphics.Color;
 /**
  * Created by Nick on 4/21/2015.
  */
-public class HSVColor {
+public class HSVColor implements Cloneable{
     private float hue;
     private float saturation;
     private float value;
@@ -48,5 +48,15 @@ public class HSVColor {
         float[] array = {hue, saturation, value};
 
         return array;
+    }
+
+    @Override
+    public HSVColor clone(){
+        return new HSVColor(hue, saturation, value);
+    }
+
+    @Override
+    public String toString(){
+        return "Hue: " + hue + ", Saturation: " + saturation + ", Value: " + value;
     }
 }
