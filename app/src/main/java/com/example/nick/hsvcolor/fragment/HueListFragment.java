@@ -18,15 +18,17 @@ import java.util.ArrayList;
  * Created by Nick on 4/21/2015.
  */
 public class HueListFragment extends Fragment {
-    private static final int degrees = 30;
+    public static int numOfSwatches;
+    public static int centerDegreeOfFirst;
 
     private ArrayList<HSVColorGradient> mHueGradientList;
     private HSVColorGradientAdapter hsvColorGradientAdapter;
+    private View view;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.hue_list_view, container, false);
+        view = inflater.inflate(R.layout.hue_list_view, container, false);
 
         final ListView listView = (ListView) view.findViewById(R.id.hue_list_view);
 
@@ -74,18 +76,32 @@ public class HueListFragment extends Fragment {
     private ArrayList<HSVColorGradient> generateHueGradientList(){
         ArrayList<HSVColorGradient> hueList = new ArrayList<>();
 
-        int numOfInitialColors = 360 / degrees;
-        float mult = 360 / numOfInitialColors;
+        float degreeRange = 360 / numOfSwatches;
+        float degreeRangeBound = degreeRange / 2;
 
-        for(int i = 0; i < numOfInitialColors; i++){
-            float startHue = (i * mult) % 360;
+        for(int i = 0; i < numOfSwatches; i++){
+            float startHue = (centerDegreeOfFirst + (i * degreeRange) - degreeRangeBound) % 360;
             HSVColor startColor = new HSVColor(startHue, 1, 1);
 
-            float endHue = ((i + 1) * mult) % 360;
+            float endHue = (centerDegreeOfFirst + (i * degreeRange) + degreeRangeBound) % 360;
             HSVColor endColor = new HSVColor(endHue, 1, 1);
+
             hueList.add(new HSVColorGradient(startColor, endColor));
         }
 
         return hueList;
+    }
+
+    public void refresh(){
+        final ListView listView = (ListView) view.findViewById(R.id.hue_list_view);
+
+        mHueGradientList = generateHueGradientList();
+
+        hsvColorGradientAdapter = new HSVColorGradientAdapter(getActivity(),
+                mHueGradientList,
+                R.layout.hue_list_item,
+                R.id.hue_list_item);
+
+        listView.setAdapter(hsvColorGradientAdapter);
     }
 }

@@ -4,6 +4,14 @@
     android:orientation="vertical"
     android:background="@color/material_blue_grey_800">
 
+    <Button
+        android:id="@+id/hue_swatches_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Configure Color Swatches"
+        android:layout_gravity="center"
+        android:onClick="onHueSwatchesButtonClick"/>
+
     <ListView
         android:id="@+id/hue_list_view"
         android:layout_width="match_parent"

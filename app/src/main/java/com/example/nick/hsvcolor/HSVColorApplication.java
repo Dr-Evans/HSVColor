@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.ContentValues;
 
 import com.example.nick.hsvcolor.db.ColorContentProvider;
+import com.example.nick.hsvcolor.db.ColorDBHelper;
 import com.example.nick.hsvcolor.db.ColorTable;
 
 import org.jsoup.Jsoup;
@@ -33,8 +34,11 @@ public class HSVColorApplication extends Application {
 
         @Override
         public void run(){
-            deleteDatabase(ColorTable.COLOR_TABLE);
+            //Clear table when rerun
+            ColorDBHelper db = new ColorDBHelper(getApplicationContext());
+            db.getWritableDatabase().delete(ColorTable.COLOR_TABLE, null, null);
 
+            //Fetch colors
             for (int i = 0; i < urls.length; i++) {
                 try {
                     Document doc = Jsoup.connect(urls[i]).get();
@@ -70,8 +74,6 @@ public class HSVColorApplication extends Application {
                     e.printStackTrace();
                 }
             }
-
-            System.out.println("LOADING FROM ONLINE COMPLETE!");
         }
 
         private float parseHue(String hueStringWithJunk){

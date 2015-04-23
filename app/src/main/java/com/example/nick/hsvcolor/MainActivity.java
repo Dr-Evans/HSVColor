@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.nick.hsvcolor.db.ColorTable;
+import com.example.nick.hsvcolor.fragment.HueColorSwatchDialogFragment;
 import com.example.nick.hsvcolor.fragment.HueListFragment;
 import com.example.nick.hsvcolor.fragment.SaturationColorSwatchDialogFragment;
 import com.example.nick.hsvcolor.fragment.SaturationListFragment;
@@ -16,6 +17,8 @@ import com.example.nick.hsvcolor.fragment.ValueListFragment;
 
 
 public class MainActivity extends Activity {
+    private static final String HUE_SWATCH_NUM = "HUE_SWATCH_NUM";
+    private static final String HUE_DEGREE = "HUE_DEGREE";
     private static final String CHECKED_ID = "CHECKED_ID";
     private static final String ORDER_BY_ID = "ORDER_BY";
     private static final String SATURATION_SWATCH_NUM = "SATURATION_SWATCH_NUM";
@@ -26,6 +29,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        HueListFragment.numOfSwatches = getPreferences(MODE_PRIVATE).getInt(HUE_SWATCH_NUM, 10);
+        HueListFragment.centerDegreeOfFirst = getPreferences(MODE_PRIVATE).getInt(HUE_DEGREE, 0);
         HSVColorApplication.checkedRadioButtonID = getPreferences(MODE_PRIVATE).getInt(CHECKED_ID, R.id.hsv_radio_button);
         HSVColorApplication.orderBy = getPreferences(MODE_PRIVATE).getString(ORDER_BY_ID, ColorTable.COLUMN_HUE + " DESC, " + ColorTable.COLUMN_SATURATION + " DESC, " + ColorTable.COLUMN_VALUE + " DESC");
         SaturationListFragment.numOfSwatches = getPreferences(MODE_PRIVATE).getInt(SATURATION_SWATCH_NUM, 10);
@@ -57,6 +62,8 @@ public class MainActivity extends Activity {
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
         editor.putInt(CHECKED_ID, HSVColorApplication.checkedRadioButtonID);
         editor.putString(ORDER_BY_ID, HSVColorApplication.orderBy);
+        editor.putInt(HUE_SWATCH_NUM, HueListFragment.numOfSwatches);
+        editor.putInt(HUE_DEGREE, HueListFragment.centerDegreeOfFirst);
         editor.putInt(SATURATION_SWATCH_NUM, SaturationListFragment.numOfSwatches);
         editor.putInt(VALUE_SWATCH_NUM, ValueListFragment.numOfSwatches);
         editor.commit();
@@ -65,6 +72,11 @@ public class MainActivity extends Activity {
     public void onSortButtonClick(View v){
         DialogFragment sortDialogFragment = new SortOrderDialogFragment();
         sortDialogFragment.show(getFragmentManager(), "sortOrder");
+    }
+
+    public void onHueSwatchesButtonClick(View v){
+        DialogFragment hueDialogFragment = new HueColorSwatchDialogFragment();
+        hueDialogFragment.show(getFragmentManager(), "hueSwatches");
     }
 
     public void onSaturationSwatchesButtonClick(View v){
