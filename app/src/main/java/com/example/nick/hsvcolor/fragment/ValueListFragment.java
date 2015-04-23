@@ -18,15 +18,16 @@ import java.util.ArrayList;
  * Created by Nick on 4/21/2015.
  */
 public class ValueListFragment extends Fragment {
-    private static final double valueChange = .2;
+    public static int numOfSwatches;
 
     private HSVColorGradient hsvColorGradient;
     private ArrayList<HSVColorGradient> mValueGradientList;
     private HSVColorGradientAdapter hsvColorGradientAdapter;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.value_list_view, container, false);
+        view = inflater.inflate(R.layout.value_list_view, container, false);
 
         final ListView listView = (ListView) view.findViewById(R.id.value_list_view);
 
@@ -75,8 +76,8 @@ public class ValueListFragment extends Fragment {
     private ArrayList<HSVColorGradient> generateValueGradientList(){
         ArrayList<HSVColorGradient> satList = new ArrayList<>();
 
-        int numOfInitialColors = (int)Math.round(1.0 / valueChange);
-        for(int i = 0; i < numOfInitialColors; i++){
+        double valueChange = 1.0 / (double)numOfSwatches;
+        for(int i = 0; i < numOfSwatches; i++){
             //Create clone
             HSVColorGradient gradient = hsvColorGradient.clone();
 
@@ -98,5 +99,18 @@ public class ValueListFragment extends Fragment {
 
     public void setHSVColorGradient(HSVColorGradient hsvColorGradient) {
         this.hsvColorGradient = hsvColorGradient;
+    }
+
+    public void refresh(){
+        final ListView listView = (ListView) view.findViewById(R.id.value_list_view);
+
+        mValueGradientList = generateValueGradientList();
+
+        hsvColorGradientAdapter = new HSVColorGradientAdapter(getActivity(),
+                mValueGradientList,
+                R.layout.value_list_item,
+                R.id.value_list_item);
+
+        listView.setAdapter(hsvColorGradientAdapter);
     }
 }

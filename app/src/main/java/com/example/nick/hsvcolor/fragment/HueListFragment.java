@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Created by Nick on 4/21/2015.
  */
 public class HueListFragment extends Fragment {
-    private static final int degrees = 90;
+    private static final int degrees = 30;
 
     private ArrayList<HSVColorGradient> mHueGradientList;
     private HSVColorGradientAdapter hsvColorGradientAdapter;
@@ -74,15 +74,14 @@ public class HueListFragment extends Fragment {
     private ArrayList<HSVColorGradient> generateHueGradientList(){
         ArrayList<HSVColorGradient> hueList = new ArrayList<>();
 
-        int offset = (degrees / 2) * -1;
         int numOfInitialColors = 360 / degrees;
         float mult = 360 / numOfInitialColors;
 
         for(int i = 0; i < numOfInitialColors; i++){
-            float startHue = ((i * mult) + offset) % 360;
+            float startHue = (i * mult) % 360;
             HSVColor startColor = new HSVColor(startHue, 1, 1);
 
-            float endHue = (((i + 1) * mult) + offset) % 360;
+            float endHue = ((i + 1) * mult) % 360;
             HSVColor endColor = new HSVColor(endHue, 1, 1);
             hueList.add(new HSVColorGradient(startColor, endColor));
         }

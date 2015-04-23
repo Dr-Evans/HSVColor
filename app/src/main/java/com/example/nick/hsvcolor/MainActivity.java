@@ -8,12 +8,18 @@ import android.view.View;
 
 import com.example.nick.hsvcolor.db.ColorTable;
 import com.example.nick.hsvcolor.fragment.HueListFragment;
+import com.example.nick.hsvcolor.fragment.SaturationColorSwatchDialogFragment;
+import com.example.nick.hsvcolor.fragment.SaturationListFragment;
 import com.example.nick.hsvcolor.fragment.SortOrderDialogFragment;
+import com.example.nick.hsvcolor.fragment.ValueColorSwatchDialogFragment;
+import com.example.nick.hsvcolor.fragment.ValueListFragment;
 
 
 public class MainActivity extends Activity {
     private static final String CHECKED_ID = "CHECKED_ID";
     private static final String ORDER_BY_ID = "ORDER_BY";
+    private static final String SATURATION_SWATCH_NUM = "SATURATION_SWATCH_NUM";
+    private static final String VALUE_SWATCH_NUM = "VALUE_SWATCH_NUM";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +28,9 @@ public class MainActivity extends Activity {
 
         HSVColorApplication.checkedRadioButtonID = getPreferences(MODE_PRIVATE).getInt(CHECKED_ID, R.id.hsv_radio_button);
         HSVColorApplication.orderBy = getPreferences(MODE_PRIVATE).getString(ORDER_BY_ID, ColorTable.COLUMN_HUE + " DESC, " + ColorTable.COLUMN_SATURATION + " DESC, " + ColorTable.COLUMN_VALUE + " DESC");
+        SaturationListFragment.numOfSwatches = getPreferences(MODE_PRIVATE).getInt(SATURATION_SWATCH_NUM, 10);
+        ValueListFragment.numOfSwatches = getPreferences(MODE_PRIVATE).getInt(VALUE_SWATCH_NUM, 10);
+
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -48,11 +57,23 @@ public class MainActivity extends Activity {
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
         editor.putInt(CHECKED_ID, HSVColorApplication.checkedRadioButtonID);
         editor.putString(ORDER_BY_ID, HSVColorApplication.orderBy);
+        editor.putInt(SATURATION_SWATCH_NUM, SaturationListFragment.numOfSwatches);
+        editor.putInt(VALUE_SWATCH_NUM, ValueListFragment.numOfSwatches);
         editor.commit();
     }
 
     public void onSortButtonClick(View v){
         DialogFragment sortDialogFragment = new SortOrderDialogFragment();
         sortDialogFragment.show(getFragmentManager(), "sortOrder");
+    }
+
+    public void onSaturationSwatchesButtonClick(View v){
+        DialogFragment saturationDialogFragment = new SaturationColorSwatchDialogFragment();
+        saturationDialogFragment.show(getFragmentManager(), "saturationSwatches");
+    }
+
+    public void onValueSwatchesButtonClick(View v){
+        DialogFragment valueDialogFragment = new ValueColorSwatchDialogFragment();
+        valueDialogFragment.show(getFragmentManager(), "valueSwatches");
     }
 }

@@ -18,15 +18,16 @@ import java.util.ArrayList;
  * Created by Nick on 4/21/2015.
  */
 public class SaturationListFragment extends Fragment {
-    private static final double saturationChange = .2;
+    public static int numOfSwatches;
 
     private HSVColorGradient hsvColorGradient;
     private ArrayList<HSVColorGradient> mSaturationGradientList;
     private HSVColorGradientAdapter hsvColorGradientAdapter;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.saturation_list_view, container, false);
+        view = inflater.inflate(R.layout.saturation_list_view, container, false);
 
         final ListView listView = (ListView) view.findViewById(R.id.saturation_list_view);
 
@@ -74,8 +75,8 @@ public class SaturationListFragment extends Fragment {
     private ArrayList<HSVColorGradient> generateSaturationGradientList(){
         ArrayList<HSVColorGradient> satList = new ArrayList<>();
 
-        int numOfInitialColors = (int)Math.round(1.0 / saturationChange);
-        for(int i = 0; i < numOfInitialColors; i++){
+        double saturationChange = 1.0 / (double)numOfSwatches;
+        for(int i = 0; i < numOfSwatches; i++){
             //Create clone
             HSVColorGradient gradient = hsvColorGradient.clone();
 
@@ -95,5 +96,18 @@ public class SaturationListFragment extends Fragment {
 
     public void setHSVColorGradient(HSVColorGradient hsvColorGradient) {
         this.hsvColorGradient = hsvColorGradient;
+    }
+
+    public void refresh(){
+        final ListView listView = (ListView) view.findViewById(R.id.saturation_list_view);
+
+        mSaturationGradientList = generateSaturationGradientList();
+
+        hsvColorGradientAdapter = new HSVColorGradientAdapter(getActivity(),
+                mSaturationGradientList,
+                R.layout.saturation_list_item,
+                R.id.saturation_list_item);
+
+        listView.setAdapter(hsvColorGradientAdapter);
     }
 }
