@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.nick.hsvcolor.HSVColorApplication;
 import com.example.nick.hsvcolor.R;
 import com.example.nick.hsvcolor.arrayadapter.HSVColorInformationAdapter;
 import com.example.nick.hsvcolor.db.ColorContentProvider;
@@ -23,53 +24,31 @@ public class SelectedColorsListFragment extends Fragment {
     private static final String mSelectionClause = ColorTable.COLUMN_HUE + ">= ? AND " + ColorTable.COLUMN_HUE + "<= ? AND " +
                                                    ColorTable.COLUMN_SATURATION + ">= ? AND " + ColorTable.COLUMN_SATURATION + "<= ? AND " +
                                                    ColorTable.COLUMN_VALUE + ">= ? AND " + ColorTable.COLUMN_VALUE + "<= ?";
-    private static final String mOrderBy = ColorTable.COLUMN_HUE + " DESC, " + ColorTable.COLUMN_SATURATION + " DESC, " + ColorTable.COLUMN_VALUE + " DESC";
     private HSVColorGradient hsvColorGradient;
     private Cursor mCursor;
-    private String[] selectionArgs;
+    private String[] mSelectionArgs;
     private HSVColorInformationAdapter hsvColorInformationAdapter;
     private ArrayList<HSVColor> mColorList;
+    private ListView mListView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.selected_colors_list_view, container, false);
 
-        final ListView listView = (ListView) view.findViewById(R.id.selected_colors_list_view);
+        mListView = (ListView) view.findViewById(R.id.selected_colors_list_view);
 
         //Get selections from color gradient
         float[] args = {
                         hsvColorGradient.getStartColor().getHue(), hsvColorGradient.getEndColor().getHue(),
-                        hsvColorGradient.getStartColor().getSaturation() - (float).05, hsvColorGradient.getEndColor().getSaturation() + (float).05,
-                        hsvColorGradient.getStartColor().getValue() - (float).05, hsvColorGradient.getEndColor().getValue() + (float).05
+                        hsvColorGradient.getEndColor().getSaturation(), hsvColorGradient.getStartColor().getSaturation(),
+                        hsvColorGradient.getEndColor().getValue(), hsvColorGradient.getStartColor().getValue()
                        };
 
-        selectionArgs = new String[args.length];
+        mSelectionArgs = new String[args.length];
         for(int i = 0; i < args.length; i++){
-            selectionArgs[i] = Float.toString(args[i]);
+            mSelectionArgs[i] = Float.toString(args[i]);
         }
 
-        //Perform database query
-        mCursor = getActivity().getContentResolver().query(
-                ColorContentProvider.CONTENT_URI,
-                null,
-                mSelectionClause,
-                selectionArgs,
-                mOrderBy
-        );
-
-        if(mCursor.getCount() < 1){
-            //Nothing found
-            Toast.makeText(getActivity(), "NOTHING FOUND", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            //Something found
-            //Extract results
-            mColorList = getColorList(mCursor);
-
-            //Display results
-            hsvColorInformationAdapter = new HSVColorInformationAdapter(getActivity(), mColorList);
-
-            listView.setAdapter(hsvColorInformationAdapter);
-        }
+        performDatabaseQuery(mSelectionClause, mSelectionArgs, HSVColorApplication.orderBy);
 
         return view;
     }
@@ -100,5 +79,36 @@ public class SelectedColorsListFragment extends Fragment {
 
     public void setHSVColorGradient(HSVColorGradient hsvColorGradient) {
         this.hsvColorGradient = hsvColorGradient;
+    }
+
+    public void setOrderBy(String orderBy){
+        HSVColorApplication.orderBy = orderBy;
+        performDatabaseQuery(mSelectionClause, mSelectionArgs, HSVColorApplication.orderBy);
+    }
+
+    private void performDatabaseQuery(String selectionClause, String[] args, String orderBy){
+        //Perform database query
+        mCursor = getActivity().getContentResolver().query(
+                ColorContentProvider.CONTENT_URI,
+                null,
+                selectionClause,
+                args,
+                orderBy
+        );
+
+        if(mCursor.getCount() < 1){
+            //Nothing found
+            Toast.makeText(getActivity(), "NOTHING FOUND", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            //Something found
+            //Extract results
+            mColorList = getColorList(mCursor);
+
+            //Display results
+            hsvColorInformationAdapter = new HSVColorInformationAdapter(getActivity(), mColorList);
+
+            mListView.setAdapter(hsvColorInformationAdapter);
+        }
     }
 }

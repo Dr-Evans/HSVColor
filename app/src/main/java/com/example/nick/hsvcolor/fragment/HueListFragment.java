@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Created by Nick on 4/21/2015.
  */
 public class HueListFragment extends Fragment {
-    private static final int degrees = 30;
+    private static final int degrees = 90;
 
     private ArrayList<HSVColorGradient> mHueGradientList;
     private HSVColorGradientAdapter hsvColorGradientAdapter;

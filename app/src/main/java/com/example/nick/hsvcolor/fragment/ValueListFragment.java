@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Created by Nick on 4/21/2015.
  */
 public class ValueListFragment extends Fragment {
-    private static final double valueChange = .1;
+    private static final double valueChange = .2;
 
     private HSVColorGradient hsvColorGradient;
     private ArrayList<HSVColorGradient> mValueGradientList;
@@ -80,8 +80,14 @@ public class ValueListFragment extends Fragment {
             //Create clone
             HSVColorGradient gradient = hsvColorGradient.clone();
 
+            HSVColor startColor = gradient.getStartColor();
+            HSVColor endColor = gradient.getEndColor();
+
             //Modify value
-            gradient.setValue(1 - (float) (i * valueChange));
+            startColor.setValue(1 - (float)(i * valueChange));
+            System.out.println(startColor.getValue());
+            endColor.setValue(1 - (float)((i + 1) * valueChange));
+            System.out.println(endColor.getValue());
 
             //Add to list
             satList.add(gradient);

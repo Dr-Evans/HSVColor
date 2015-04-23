@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * Created by Nick on 4/21/2015.
  */
 public class SaturationListFragment extends Fragment {
-    private static final double saturationChange = .1;
+    private static final double saturationChange = .2;
 
     private HSVColorGradient hsvColorGradient;
     private ArrayList<HSVColorGradient> mSaturationGradientList;
@@ -79,8 +79,12 @@ public class SaturationListFragment extends Fragment {
             //Create clone
             HSVColorGradient gradient = hsvColorGradient.clone();
 
+            HSVColor startColor = gradient.getStartColor();
+            HSVColor endColor = gradient.getEndColor();
+
             //Modify saturation
-            gradient.setSaturation(1 - (float)(i * saturationChange));
+            startColor.setSaturation(1 - (float)(i * saturationChange));
+            endColor.setSaturation(1 - (float)((i + 1) * saturationChange));
 
             //Add to list
             satList.add(gradient);

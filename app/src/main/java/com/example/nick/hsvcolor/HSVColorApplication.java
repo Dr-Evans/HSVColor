@@ -15,9 +15,13 @@ import org.jsoup.select.Elements;
  * Created by Nick on 4/22/2015.
  */
 public class HSVColorApplication extends Application {
+    public static String orderBy;
+    public static int checkedRadioButtonID;
+
     @Override
     public void onCreate(){
         super.onCreate();
+
         ColorFetchThread thread = new ColorFetchThread();
         thread.start();
     }

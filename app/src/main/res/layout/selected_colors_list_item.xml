@@ -18,7 +18,7 @@
         android:orientation="vertical"
         android:layout_weight="5"
         android:background="#C0C0C0"
-        android:paddingLeft="4dp">
+        android:paddingLeft="5dp">
 
         <TextView
             android:id="@+id/color_name"
