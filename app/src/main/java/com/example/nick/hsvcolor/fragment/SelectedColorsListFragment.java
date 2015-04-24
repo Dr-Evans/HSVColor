@@ -21,9 +21,10 @@ import java.util.ArrayList;
  * Created by Nick on 4/22/2015.
  */
 public class SelectedColorsListFragment extends Fragment {
-    private static final String mSelectionClause = ColorTable.COLUMN_HUE + ">= ? AND " + ColorTable.COLUMN_HUE + "<= ? AND " +
-                                                   ColorTable.COLUMN_SATURATION + ">= ? AND " + ColorTable.COLUMN_SATURATION + "<= ? AND " +
-                                                   ColorTable.COLUMN_VALUE + ">= ? AND " + ColorTable.COLUMN_VALUE + "<= ?";
+    private static final String mHueClauseAnd = ColorTable.COLUMN_HUE + ">= ? AND " + ColorTable.COLUMN_HUE + "<= ? AND ";
+    private static final String mHueClauseOr = ColorTable.COLUMN_HUE + ">= ? OR " + ColorTable.COLUMN_HUE + "<= ? AND ";
+    private static String mSelectionClause = ColorTable.COLUMN_SATURATION + ">= ? AND " + ColorTable.COLUMN_SATURATION + "<= ? AND " +
+                                             ColorTable.COLUMN_VALUE + ">= ? AND " + ColorTable.COLUMN_VALUE + "<= ?";
     private HSVColorGradient hsvColorGradient;
     private Cursor mCursor;
     private String[] mSelectionArgs;
@@ -35,6 +36,14 @@ public class SelectedColorsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.selected_colors_list_view, container, false);
 
         mListView = (ListView) view.findViewById(R.id.selected_colors_list_view);
+
+        String selection;
+        if (hsvColorGradient.getStartColor().getHue() > hsvColorGradient.getEndColor().getHue()){
+            selection = mHueClauseOr + mSelectionClause;
+        }
+        else {
+            selection = mHueClauseAnd + mSelectionClause;
+        }
 
         //Get selections from color gradient
         float[] args = {
@@ -48,7 +57,7 @@ public class SelectedColorsListFragment extends Fragment {
             mSelectionArgs[i] = Float.toString(args[i]);
         }
 
-        performDatabaseQuery(mSelectionClause, mSelectionArgs, HSVColorApplication.orderBy);
+        performDatabaseQuery(selection, mSelectionArgs, HSVColorApplication.orderBy);
 
         return view;
     }
@@ -83,7 +92,16 @@ public class SelectedColorsListFragment extends Fragment {
 
     public void setOrderBy(String orderBy){
         HSVColorApplication.orderBy = orderBy;
-        performDatabaseQuery(mSelectionClause, mSelectionArgs, HSVColorApplication.orderBy);
+
+        String selection;
+        if (hsvColorGradient.getStartColor().getHue() > hsvColorGradient.getEndColor().getHue()){
+            selection = mHueClauseOr + mSelectionClause;
+        }
+        else {
+            selection = mHueClauseAnd + mSelectionClause;
+        }
+
+        performDatabaseQuery(selection, mSelectionArgs, HSVColorApplication.orderBy);
     }
 
     private void performDatabaseQuery(String selectionClause, String[] args, String orderBy){

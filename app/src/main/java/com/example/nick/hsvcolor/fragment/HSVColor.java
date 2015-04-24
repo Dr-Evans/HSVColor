@@ -12,7 +12,10 @@ public class HSVColor implements Cloneable{
     private String name;
 
     public HSVColor (float h, float s, float v){
-        hue = h;
+        hue = h % 360;
+        if (hue < 0) {
+            hue += 360;
+        }
         saturation = s;
         value = v;
     }
