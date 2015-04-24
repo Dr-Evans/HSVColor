@@ -7,8 +7,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp">
+        android:layout_height="0dp"
+        android:paddingLeft="10dp"
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/hue_swatch_degree_text_view"
@@ -44,5 +45,12 @@
             android:layout_weight="6"/>
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/hue_preview_swatch"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
 
 </LinearLayout>

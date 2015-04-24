@@ -25,11 +25,15 @@ public class HueColorSwatchDialogFragment extends DialogFragment{
 
         final SeekBar hueSwatchDegreeSeekBar = (SeekBar) hueSwatchView.findViewById(R.id.hue_swatch_degree_seekbar);
         final TextView hueSwatchDegreeTextView = (TextView) hueSwatchView.findViewById(R.id.hue_swatch_degree_text_view);
+        final View huePreviewView = hueSwatchView.findViewById(R.id.hue_preview_swatch);
 
         hueSwatchDegreeSeekBar.setProgress(HueListFragment.centerDegreeOfFirst);
         hueSwatchDegreeTextView.setText(String.valueOf(HueListFragment.centerDegreeOfFirst) + "°");
         hueSwatchDegreeSeekBar.incrementProgressBy(1);
         hueSwatchDegreeSeekBar.setMax(360);
+
+        final HSVColor previewColor = new HSVColor((float) HueListFragment.centerDegreeOfFirst, (float) 1, (float) 1);
+        huePreviewView.setBackgroundColor(previewColor.toInt());
 
         final int currentDegree = HueListFragment.centerDegreeOfFirst;
         hueSwatchDegreeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -37,6 +41,9 @@ public class HueColorSwatchDialogFragment extends DialogFragment{
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 hueSwatchDegreeTextView.setText(String.valueOf(progress) + "°");
                 HueListFragment.centerDegreeOfFirst = progress;
+
+                previewColor.setHue((float) progress);
+                huePreviewView.setBackgroundColor(previewColor.toInt());
             }
 
             @Override
